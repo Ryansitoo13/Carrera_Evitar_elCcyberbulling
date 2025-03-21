@@ -30,3 +30,8 @@ button {
     border-radius: 5px;
     margin-top: 10px;
 }
+
+#gameCanvas {
+    background: linear-gradient(to bottom, #555, #222);
+    border: 5px solid black;
+}
