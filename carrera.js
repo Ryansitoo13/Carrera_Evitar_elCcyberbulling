@@ -34,6 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function moveObjects(arr) {
         arr.forEach(obj => obj.y += speed);
+        arr.forEach((obj, index) => {
+            if (obj.y > canvas.height) {
+                arr[index] = { x: Math.random() * 400, y: -100, width: 80, height: 40 };
+            }
+        });
     }
 
     function detectCollision(obj) {
@@ -60,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (detectCollision(solution)) {
                 score++;
                 solutions.splice(index, 1);
+                solutions.push({ x: Math.random() * 400, y: -100, width: 80, height: 40 });
                 if (score >= 5) {
                     document.getElementById("message").innerText = "✅ ¡Felicidades! Sabes cómo actuar ante el cyberbullying.";
                     gameOver = true;
