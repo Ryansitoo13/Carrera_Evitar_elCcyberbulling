@@ -16,13 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function drawCar() {
         ctx.fillStyle = car.color;
-        ctx.beginPath();
-        ctx.moveTo(car.x, car.y);
-        ctx.lineTo(car.x + car.width, car.y + car.height / 2);
-        ctx.lineTo(car.x, car.y + car.height);
-        ctx.lineTo(car.x - car.width, car.y + car.height / 2);
-        ctx.closePath();
-        ctx.fill();
+        ctx.fillRect(car.x, car.y, car.width, car.height);
+        ctx.fillStyle = "black";
+        ctx.fillRect(car.x + 10, car.y + 10, 10, 10);
+        ctx.fillRect(car.x + 30, car.y + 10, 10, 10);
     }
 
     function drawObjects(arr, color, textArray) {
@@ -74,15 +71,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function startGame() {
-        obstacles = [
-            { x: 100, y: -20, width: 80, height: 40 },
-            { x: 300, y: -100, width: 80, height: 40 },
-            { x: 200, y: -200, width: 80, height: 40 }
-        ];
-        solutions = [
-            { x: 150, y: -50, width: 80, height: 40 },
-            { x: 250, y: -150, width: 80, height: 40 }
-        ];
+        obstacles = [];
+        solutions = [];
+        for (let i = 0; i < 5; i++) {
+            obstacles.push({ x: Math.random() * 400, y: -i * 150, width: 80, height: 40 });
+            solutions.push({ x: Math.random() * 400, y: -i * 200 - 50, width: 80, height: 40 });
+        }
         score = 0;
         gameOver = false;
         document.getElementById("message").innerText = "";
