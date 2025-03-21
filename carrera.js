@@ -23,12 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawObjects(arr, color, textArray) {
-        ctx.fillStyle = color;
         arr.forEach((obj, index) => {
+            ctx.fillStyle = color;
             ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
             ctx.fillStyle = "white";
             ctx.font = "14px Arial";
-            ctx.fillText(textArray[index % textArray.length], obj.x + 10, obj.y + 25);
+            ctx.fillText(textArray[index % textArray.length], obj.x + 5, obj.y + 25);
         });
     }
 
@@ -96,3 +96,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("startGameBtn").addEventListener("click", startGame);
 });
+
