@@ -11,18 +11,27 @@ document.addEventListener("DOMContentLoaded", function () {
     let score = 0;
     let gameOver = false;
 
+    const insults = ["Feo", "Bobo", "Malo", "Tonto", "Torpe"];
+    const solutionsText = ["Bloquear", "Contar a un adulto", "Reportar"];
+
     function drawCar() {
         ctx.fillStyle = car.color;
-        ctx.fillRect(car.x, car.y, car.width, car.height);
+        ctx.beginPath();
+        ctx.moveTo(car.x, car.y);
+        ctx.lineTo(car.x + car.width, car.y + car.height / 2);
+        ctx.lineTo(car.x, car.y + car.height);
+        ctx.lineTo(car.x - car.width, car.y + car.height / 2);
+        ctx.closePath();
+        ctx.fill();
     }
 
-    function drawObjects(arr, color, text) {
+    function drawObjects(arr, color, textArray) {
         ctx.fillStyle = color;
-        arr.forEach(obj => {
+        arr.forEach((obj, index) => {
             ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
             ctx.fillStyle = "white";
             ctx.font = "14px Arial";
-            ctx.fillText(text, obj.x + 10, obj.y + 25);
+            ctx.fillText(textArray[index % textArray.length], obj.x + 10, obj.y + 25);
         });
     }
 
@@ -40,8 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
         drawCar();
         moveObjects(obstacles);
         moveObjects(solutions);
-        drawObjects(obstacles, "red", "INSULTO");
-        drawObjects(solutions, "green", "BLOQUEAR");
+        drawObjects(obstacles, "red", insults);
+        drawObjects(solutions, "green", solutionsText);
 
         obstacles.forEach((obstacle, index) => {
             if (detectCollision(obstacle)) {
@@ -87,4 +96,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("startGameBtn").addEventListener("click", startGame);
 });
-
