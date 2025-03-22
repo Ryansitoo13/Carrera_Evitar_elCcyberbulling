@@ -10,7 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let speed = 2.5;
     let score = 0;
     let gameOver = false;
-    let goalLine = { y: -1500, height: 20, color: "yellow" };
+    let goalLine = { y: -18000, height: 20, color: "yellow" };
+    let startTime;
+    const gameDuration = 5 * 60 * 1000; // 5 minutos en milisegundos
 
     const insults = ["Feo", "Bobo", "Malo", "Tonto", "Torpe"];
     const solutionsText = ["Bloquear", "Contar a un adulto", "Reportar"];
@@ -62,6 +64,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function update() {
         if (gameOver) return;
+
+        const currentTime = new Date().getTime();
+        if (currentTime - startTime >= gameDuration) {
+            document.getElementById("message").innerText = "⏰ ¡Tiempo cumplido! ¡Buen trabajo evitando el cyberbullying!";
+            gameOver = true;
+            return;
+        }
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawGoalLine();
         drawCar();
@@ -101,10 +111,11 @@ document.addEventListener("DOMContentLoaded", function () {
             obstacles.push({ x: Math.random() * 400, y: -i * 150, width: 80, height: 40 });
             solutions.push({ x: Math.random() * 400, y: -i * 200 - 50, width: 80, height: 40 });
         }
-        goalLine.y = -1500;
+        goalLine.y = -18000;
         score = 0;
         gameOver = false;
         document.getElementById("message").innerText = "";
+        startTime = new Date().getTime();
         update();
     }
 
