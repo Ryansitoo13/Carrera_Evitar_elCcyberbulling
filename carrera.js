@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let gameOver = false;
     let goalLine = { y: -18000, height: 20, color: "yellow" };
     let startTime;
-    const gameDuration = 5 * 60 * 1000; // 5 minutos en milisegundos
+    const gameDuration = 5 * 60 * 1000; // 5 minutos
 
     const insults = ["Feo", "Bobo", "Malo", "Tonto", "Torpe"];
     const solutionsText = ["Bloquear", "Contar a un adulto", "Reportar"];
@@ -25,13 +25,21 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.fillRect(car.x + 30, car.y + 10, 10, 10);
     }
 
-    function drawObjects(arr, color, textArray) {
+    function drawObjects(arr, color, textArray, isGood = false) {
         arr.forEach((obj, index) => {
             ctx.fillStyle = color;
-            ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+            if (isGood) {
+                ctx.beginPath();
+                ctx.arc(obj.x + obj.width / 2, obj.y + obj.height / 2, obj.width / 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.closePath();
+            } else {
+                ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+            }
             ctx.fillStyle = "white";
-            ctx.font = "14px Arial";
-            ctx.fillText(textArray[index % textArray.length], obj.x + 5, obj.y + 25);
+            ctx.font = "12px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(textArray[index % textArray.length], obj.x + obj.width / 2, obj.y + obj.height / 2 + 4);
         });
     }
 
@@ -50,8 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 let safe = false;
                 let newObj;
                 while (!safe) {
-                    newObj = { x: Math.random() * 400, y: -Math.random() * 300 - 100, width: 80, height: 40 };
-                    safe = !arr.some(other => Math.abs(newObj.y - other.y) < 50 && Math.abs(newObj.x - other.x) < 80);
+                    newObj = { x: Math.random() * 400, y: -Math.random() * 300 - 100, width: 60, height: 60 };
+                    safe = !arr.some(other => Math.abs(newObj.y - other.y) < 50 && Math.abs(newObj.x - other.x) < 60);
                 }
                 arr[index] = newObj;
             }
@@ -78,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         moveObjects(obstacles);
         moveObjects(solutions);
         drawObjects(obstacles, "red", insults);
-        drawObjects(solutions, "green", solutionsText);
+        drawObjects(solutions, "green", solutionsText, true);
 
         goalLine.y += speed;
         if (goalLine.y >= car.y) {
@@ -97,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (detectCollision(solution)) {
                 score++;
                 solutions.splice(index, 1);
-                solutions.push({ x: Math.random() * 400, y: -100, width: 80, height: 40 });
+                solutions.push({ x: Math.random() * 400, y: -100, width: 60, height: 60 });
             }
         });
 
@@ -108,8 +116,8 @@ document.addEventListener("DOMContentLoaded", function () {
         obstacles = [];
         solutions = [];
         for (let i = 0; i < 7; i++) {
-            obstacles.push({ x: Math.random() * 400, y: -i * 150, width: 80, height: 40 });
-            solutions.push({ x: Math.random() * 400, y: -i * 200 - 50, width: 80, height: 40 });
+            obstacles.push({ x: Math.random() * 400, y: -i * 150, width: 60, height: 60 });
+            solutions.push({ x: Math.random() * 400, y: -i * 200 - 50, width: 60, height: 60 });
         }
         goalLine.y = -18000;
         score = 0;
