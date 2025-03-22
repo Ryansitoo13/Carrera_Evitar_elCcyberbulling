@@ -36,12 +36,18 @@ button {
     border: 5px solid black;
 }
 
-/* Ajustes para la visibilidad de los textos en los obstáculos */
-.obstacle-text, .solution-text {
-    font-size: 16px; /* Aumenta el tamaño */
-    font-weight: bold; /* Hace que sea más visible */
+/* Línea de meta visual */
+.meta {
+    position: absolute;
+    width: 500px;
+    height: 20px;
+    background-color: yellow;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
-    color: black; /* Cambia el color para que tenga mejor contraste */
-    text-shadow: 1px 1px 2px white, 0 0 5px white; /* Agrega un borde blanco para mejorar visibilidad */
+    font-weight: bold;
+    font-size: 20px;
+    color: black;
 }
 
