@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let speed = 3;
     let score = 0;
     let gameOver = false;
+    let goalLine = { y: -600, height: 20, color: "yellow" };
 
     const insults = ["Feo", "Bobo", "Malo", "Tonto", "Torpe"];
     const solutionsText = ["Bloquear", "Contar a un adulto", "Reportar"];
@@ -32,6 +33,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    function drawGoalLine() {
+        ctx.fillStyle = goalLine.color;
+        ctx.fillRect(0, goalLine.y, canvas.width, goalLine.height);
+        ctx.fillStyle = "black";
+        ctx.font = "20px Arial";
+        ctx.fillText("META", canvas.width / 2 - 20, goalLine.y + 15);
+    }
+
     function moveObjects(arr) {
         arr.forEach(obj => obj.y += speed);
         arr.forEach((obj, index) => {
@@ -48,13 +57,20 @@ document.addEventListener("DOMContentLoaded", function () {
     function update() {
         if (gameOver) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGoalLine();
         drawCar();
         moveObjects(obstacles);
         moveObjects(solutions);
         drawObjects(obstacles, "red", insults);
         drawObjects(solutions, "green", solutionsText);
 
-        obstacles.forEach((obstacle, index) => {
+        goalLine.y += speed;
+        if (goalLine.y >= car.y) {
+            document.getElementById("message").innerText = "🎉 ¡Felicidades! Has esquivado todos los peligros y llegaste a la meta!";
+            gameOver = true;
+        }
+
+        obstacles.forEach((obstacle) => {
             if (detectCollision(obstacle)) {
                 document.getElementById("message").innerText = "❌ ¡Cuidado! No respondas a insultos en línea.";
                 gameOver = true;
@@ -66,10 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 score++;
                 solutions.splice(index, 1);
                 solutions.push({ x: Math.random() * 400, y: -100, width: 80, height: 40 });
-                if (score >= 5) {
-                    document.getElementById("message").innerText = "✅ ¡Felicidades! Sabes cómo actuar ante el cyberbullying.";
-                    gameOver = true;
-                }
             }
         });
 
@@ -83,6 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
             obstacles.push({ x: Math.random() * 400, y: -i * 150, width: 80, height: 40 });
             solutions.push({ x: Math.random() * 400, y: -i * 200 - 50, width: 80, height: 40 });
         }
+        goalLine.y = -600;
         score = 0;
         gameOver = false;
         document.getElementById("message").innerText = "";
@@ -96,4 +109,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("startGameBtn").addEventListener("click", startGame);
 });
-
