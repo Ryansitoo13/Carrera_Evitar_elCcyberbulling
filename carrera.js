@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let car = { x: 225, y: 500, width: 50, height: 80, color: "blue" };
     let obstacles = [];
     let solutions = [];
-    let speed = 3;
+    let speed = 2.5;
     let score = 0;
     let gameOver = false;
-    let goalLine = { y: -600, height: 20, color: "yellow" };
+    let goalLine = { y: -1500, height: 20, color: "yellow" };
 
     const insults = ["Feo", "Bobo", "Malo", "Tonto", "Torpe"];
     const solutionsText = ["Bloquear", "Contar a un adulto", "Reportar"];
@@ -45,7 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
         arr.forEach(obj => obj.y += speed);
         arr.forEach((obj, index) => {
             if (obj.y > canvas.height) {
-                arr[index] = { x: Math.random() * 400, y: -100, width: 80, height: 40 };
+                let safe = false;
+                let newObj;
+                while (!safe) {
+                    newObj = { x: Math.random() * 400, y: -Math.random() * 300 - 100, width: 80, height: 40 };
+                    safe = !arr.some(other => Math.abs(newObj.y - other.y) < 50 && Math.abs(newObj.x - other.x) < 80);
+                }
+                arr[index] = newObj;
             }
         });
     }
@@ -91,11 +97,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function startGame() {
         obstacles = [];
         solutions = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 7; i++) {
             obstacles.push({ x: Math.random() * 400, y: -i * 150, width: 80, height: 40 });
             solutions.push({ x: Math.random() * 400, y: -i * 200 - 50, width: 80, height: 40 });
         }
-        goalLine.y = -600;
+        goalLine.y = -1500;
         score = 0;
         gameOver = false;
         document.getElementById("message").innerText = "";
