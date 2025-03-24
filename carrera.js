@@ -12,10 +12,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let gameOver = false;
     let goalLine = { y: -18000, height: 20, color: "yellow" };
     let startTime;
-    const gameDuration = 5 * 60 * 1000; // 5 minutos
 
+    const gameDuration = 5 * 60 * 1000; // 5 minutos
     const insults = ["Feo", "Bobo", "Malo", "Tonto", "Torpe"];
     const solutionsText = ["Bloquear", "Contar a un adulto", "Reportar"];
+
+    let attempts = 0;
+    const maxAttempts = 3;
+    let hasWonBefore = false;
 
     function drawCar() {
         ctx.fillStyle = car.color;
@@ -48,7 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.fillRect(0, goalLine.y, canvas.width, goalLine.height);
         ctx.fillStyle = "black";
         ctx.font = "20px Arial";
-        ctx.fillText("META", canvas.width / 2 - 20, goalLine.y + 15);
+        ctx.textAlign = "center";
+        ctx.fillText("META", canvas.width / 2, goalLine.y + 15);
     }
 
     function moveObjects(arr) {
@@ -67,7 +72,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function detectCollision(obj) {
-        return obj.y + obj.height >= car.y && obj.x < car.x + car.width && obj.x + obj.width > car.x;
+        return obj.y + obj.height >= car.y &&
+               obj.y <= car.y + car.height &&
+               obj.x < car.x + car.width &&
+               obj.x + obj.width > car.x;
     }
 
     function update() {
@@ -89,8 +97,15 @@ document.addEventListener("DOMContentLoaded", function () {
         drawObjects(solutions, "green", solutionsText, true);
 
         goalLine.y += speed;
+
         if (goalLine.y >= car.y) {
-            document.getElementById("message").innerText = "🎉 ¡Felicidades! Has esquivado todos los peligros y llegaste a la meta!";
+            if (!hasWonBefore) {
+                score += 150;
+                hasWonBefore = true;
+                document.getElementById("message").innerText = `🎉 ¡Felicidades! Llegaste a la meta y ganaste 150 puntos. Total: ${score}`;
+            } else {
+                document.getElementById("message").innerText = "🎉 ¡Ya obtuviste los 150 puntos! Puedes seguir jugando por diversión 😊";
+            }
             gameOver = true;
         }
 
@@ -113,6 +128,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function startGame() {
+        if (attempts >= maxAttempts) {
+            document.getElementById("message").innerText = "🔒 Ya has usado tus 3 intentos.";
+            return;
+        }
+
+        attempts++;
         obstacles = [];
         solutions = [];
         for (let i = 0; i < 7; i++) {
@@ -134,3 +155,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("startGameBtn").addEventListener("click", startGame);
 });
+
